@@ -153,6 +153,45 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .story-box {
+      min-height: 210px;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px 18px;
+      background:
+        linear-gradient(145deg, rgba(135, 54, 71, 0.16), transparent 58%),
+        rgba(255,255,255,0.04);
+    }
+
+    .story-text {
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.55rem, 7.8vw, 2.55rem);
+      line-height: 1.15;
+      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .story-text.swap {
+      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .story-count {
+      color: var(--soft);
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    @keyframes storyIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .btn {
       width: 100%;
       min-height: 58px;
@@ -530,13 +569,12 @@
         </div>
         <p class="eyebrow">Un regalo de tus hijos</p>
         <h1>Viaje sorpresa</h1>
-        <div class="intro-lines">
-          <p>Papá, llevamos tiempo preparando algo muy especial para ti.</p>
-          <p>No es solo una escapada. Es una promesa que queríamos cumplir contigo.</p>
-          <p>Uno de tus sueños está a punto de hacerse realidad. ¿Puedes adivinar a dónde vamos?</p>
+        <div class="story-box" aria-live="polite">
+          <div class="story-count" id="storyCount">Parte 1 de 6</div>
+          <div class="story-text" id="storyText"></div>
         </div>
         <div class="actions single">
-          <button class="btn" id="startBtn">Empezar</button>
+          <button class="btn" id="storyBtn">Siguiente</button>
         </div>
       </div>
     </section>
@@ -590,14 +628,13 @@
         </div>
         <p class="eyebrow">Lo has adivinado</p>
         <h2>Cracovia, Polonia</h2>
-        <p class="congrats">Enhorabuena, papá: tus hijos te llevan de viaje a Cracovia.</p>
-        <p class="final-message">Y más importante aún: vamos a cumplir contigo tu sueño de visitar Auschwitz-Birkenau. Lo haremos juntos, con calma, con respeto y con toda la emoción que merece este momento.</p>
+        <p class="final-message">¡Lo has adivinado, papá! Nos vamos a Cracovia, Polonia. Y sí... vamos a visitar Auschwitz-Birkenau. Siempre has soñado con ir, y Cristóbal y Krichi van a estar ahí contigo. Porque no hay nadie con quien prefiramos vivir este momento. Esto es nuestro regalo para ti.</p>
         <div class="needed" id="neededHints"></div>
 
         <div class="itinerary" aria-label="Itinerario completo">
           <div class="day">
             <strong>Viernes de noviembre</strong>
-            <span>Salida desde Madrid y llegada a Cracovia. Primera noche para caminar, cenar juntos y empezar la escapada.</span>
+            <span>Vuelo Madrid-Cracovia. Llegada, primera noche y paseo tranquilo para empezar el viaje juntos.</span>
           </div>
           <div class="day">
             <strong>Sábado</strong>
@@ -621,20 +658,29 @@
   </main>
 
   <script>
+    const storyPages = [
+      'Papá... ya sabes que tu hijo Cristóbal es una persona muy impulsiva. Así que ha tomado una decisión.',
+      'Ha decidido cumplir uno de tus sueños. Y no va a ir solo... va con Krichi.',
+      'Sí, los dos juntos. Para cumplir algo que llevas toda la vida queriendo hacer.',
+      'Bueno, ya sabías que nos íbamos de viaje... aunque te dijimos que íbamos a Toledo 😅',
+      'Toledo era mentira. El destino real es algo mucho más grande. ¿Crees que puedes adivinarlo?',
+      'Si aceptas, empieza el reto.'
+    ];
+
     const hints = [
-      'Hace frío, pero la ciudad se ilumina pronto en noviembre',
-      'Hay que volar hacia el noreste de Europa',
-      'Será una escapada de tres noches, con abrigo en la maleta',
-      'No se paga en euros, aunque seguimos dentro de la Unión Europea',
-      'Su casco antiguo tiene una plaza enorme rodeada de soportales y cafés',
-      'Uno de sus barrios guarda una memoria judía muy viva',
-      'Allí hay una fábrica que una película hizo inolvidable',
-      'El sábado iremos a un lugar que no se visita por turismo, sino por memoria',
-      'A poco más de una hora está Auschwitz-Birkenau'
+      'El destino está en Europa',
+      'Hace bastante frío en noviembre allí',
+      'No se habla español ni inglés como lengua principal',
+      'La moneda no es el euro',
+      'Tiene una de las plazas medievales más grandes y bonitas de Europa',
+      'Este país vivió uno de los momentos más oscuros de la historia de la humanidad',
+      'Vais a visitar un lugar que aparece en todos los libros de historia del mundo',
+      'Es el campo de concentración más conocido del mundo... y está a solo 1 hora de donde vais a dormir'
     ];
 
     const validAnswers = ['cracovia', 'krakow', 'kraków', 'auschwitz', 'polonia', 'poland'];
 
+    let storyIndex = 0;
     let hintIndex = 0;
     let hintsSeen = 1;
 
@@ -652,6 +698,9 @@
     const answer = document.getElementById('answer');
     const neededHints = document.getElementById('neededHints');
     const nextHintBtn = document.getElementById('nextHintBtn');
+    const storyText = document.getElementById('storyText');
+    const storyCount = document.getElementById('storyCount');
+    const storyBtn = document.getElementById('storyBtn');
 
     function normalize(value) {
       return value
@@ -665,6 +714,15 @@
     function showScreen(name) {
       Object.values(screens).forEach(screen => screen.classList.remove('active'));
       screens[name].classList.add('active');
+    }
+
+    function renderStory() {
+      storyText.classList.remove('swap');
+      void storyText.offsetWidth;
+      storyText.textContent = storyPages[storyIndex];
+      storyText.classList.add('swap');
+      storyCount.textContent = `Parte ${storyIndex + 1} de ${storyPages.length}`;
+      storyBtn.textContent = storyIndex === storyPages.length - 1 ? 'Acepto el reto → Empezar con las pistas' : 'Siguiente';
     }
 
     function renderMeter() {
@@ -699,6 +757,23 @@
       setTimeout(() => answer.focus(), 250);
     }
 
+    function nextStoryPage() {
+      if (storyIndex >= storyPages.length - 1) {
+        startGame();
+        return;
+      }
+
+      storyIndex += 1;
+      renderStory();
+    }
+
+    function restartStory() {
+      storyIndex = 0;
+      renderStory();
+      showScreen('start');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function nextHint() {
       if (hintIndex >= hints.length - 1) return;
       hintIndex += 1;
@@ -718,9 +793,9 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.getElementById('startBtn').addEventListener('click', startGame);
-    document.getElementById('resetBtn').addEventListener('click', startGame);
-    document.getElementById('playAgainBtn').addEventListener('click', startGame);
+    storyBtn.addEventListener('click', nextStoryPage);
+    document.getElementById('resetBtn').addEventListener('click', restartStory);
+    document.getElementById('playAgainBtn').addEventListener('click', restartStory);
     nextHintBtn.addEventListener('click', nextHint);
 
     document.getElementById('answerForm').addEventListener('submit', event => {
@@ -733,6 +808,7 @@
       }
     });
 
+    renderStory();
     renderHint();
   </script>
 </body>
