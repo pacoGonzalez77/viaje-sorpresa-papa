@@ -657,6 +657,7 @@
 
         <div class="actions">
           <button class="btn secondary" id="nextHintBtn" type="button">Dame otra pista</button>
+          <button class="btn secondary" id="giveUpBtn" type="button">Me rindo</button>
           <button class="btn secondary" id="resetBtn" type="button">Volver a empezar</button>
         </div>
 
@@ -688,7 +689,7 @@
           <img src="assets/fotos-papa/final-clean.jpeg" alt="Entrada de Auschwitz-Birkenau">
           <figcaption>Y este es el lugar que vais a visitar juntos.</figcaption>
         </figure>
-        <p class="final-message">¡Lo has adivinado, papá! Nos vamos a Cracovia, Polonia. Y sí... vamos a visitar Auschwitz-Birkenau. Siempre has soñado con ir, y Cristóbal va a estar ahí contigo. Pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
+        <p class="final-message">¡Feliz 60 cumpleaños, papá! Lo has adivinado: nos vamos a Cracovia, Polonia. Y sí... vamos a visitar Auschwitz-Birkenau. Siempre has querido ir, y Cristóbal va a estar ahí contigo. Pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
         <div class="needed" id="neededHints"></div>
 
         <div class="itinerary" aria-label="Itinerario completo">
@@ -756,7 +757,7 @@
         caption: 'Eso también cuenta como parte importante del viaje.'
       },
       {
-        text: 'Feliz 60 cumpleaños. Ahora sí: ¿aceptas el reto?',
+        text: 'Ahora sí: ¿aceptas el reto?',
         image: 'assets/fotos-papa/cumples_60.jpeg',
         alt: 'Papá celebrando sus 60 años',
         caption: 'El regalo empieza aquí.'
@@ -794,6 +795,7 @@
     const answer = document.getElementById('answer');
     const neededHints = document.getElementById('neededHints');
     const nextHintBtn = document.getElementById('nextHintBtn');
+    const giveUpBtn = document.getElementById('giveUpBtn');
     const storyImage = document.getElementById('storyImage');
     const storyCaption = document.getElementById('storyCaption');
     const storyText = document.getElementById('storyText');
@@ -897,10 +899,17 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function giveUp() {
+      neededHints.textContent = `Te has rendido tras ${hintsSeen} ${hintsSeen === 1 ? 'pista' : 'pistas'}.`;
+      showScreen('final');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     storyBtn.addEventListener('click', nextStoryPage);
     document.getElementById('resetBtn').addEventListener('click', restartStory);
     document.getElementById('playAgainBtn').addEventListener('click', restartStory);
     nextHintBtn.addEventListener('click', nextHint);
+    giveUpBtn.addEventListener('click', giveUp);
 
     document.getElementById('answerForm').addEventListener('submit', event => {
       event.preventDefault();
