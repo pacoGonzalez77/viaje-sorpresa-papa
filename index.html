@@ -255,6 +255,8 @@
       color: var(--text);
     }
 
+    .is-hidden { display: none !important; }
+
     .actions {
       display: grid;
       gap: 12px;
@@ -689,12 +691,12 @@
           </div>
         </div>
         <p class="eyebrow">Lo has adivinado</p>
-        <h2>Cracovia, Polonia</h2>
+        <h2>¡Feliz 60 cumpleaños!</h2>
         <figure class="final-photo">
           <img src="assets/fotos-papa/cumples_60.jpeg" alt="Papá celebrando sus 60 años">
-          <figcaption>Feliz 60 cumpleaños, papá.</figcaption>
+          <figcaption>Lo has acertado, papá.</figcaption>
         </figure>
-        <p class="final-message">Lo has adivinado: nos vamos a Cracovia, Polonia. Cristóbal va a estar ahí contigo, pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
+        <p class="final-message">Nos vamos a Cracovia, Polonia. Cristóbal va a estar ahí contigo, pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
         <figure class="final-photo">
           <img src="assets/fotos-papa/final-clean.jpeg" alt="Entrada de Auschwitz-Birkenau">
           <figcaption>Y sí... vamos a visitar Auschwitz-Birkenau, ese sitio al que siempre has querido ir.</figcaption>
@@ -760,10 +762,16 @@
         caption: 'Esta vez igual toca cambiar casco por maleta.'
       },
       {
-        text: 'Y donde comerás genial todo el día. Ahora sí: ¿aceptas el reto?',
+        text: 'Y donde comerás genial todo el día.',
         image: 'assets/fotos-papa/comerasasidefeliz.jpeg',
         alt: 'Papá sonriendo con comida',
         caption: 'Eso también cuenta como parte importante del viaje.'
+      },
+      {
+        text: 'Ahora sí: ¿aceptas el reto?',
+        image: 'assets/fotos-papa/portada.jpeg',
+        alt: 'Papá mirando el móvil en casa',
+        caption: 'A partir de aquí empiezan las pistas.'
       }
     ];
 
@@ -853,6 +861,7 @@
       nextHintBtn.disabled = hintIndex === hints.length - 1;
       nextHintBtn.textContent = hintIndex === hints.length - 1 ? 'No quedan más pistas' : 'Dame otra pista';
       nextHintBtn.style.opacity = nextHintBtn.disabled ? '0.45' : '1';
+      giveUpBtn.classList.toggle('is-hidden', hintIndex !== hints.length - 1);
       renderMeter();
     }
 
