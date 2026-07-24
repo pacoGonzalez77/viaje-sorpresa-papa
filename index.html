@@ -165,18 +165,6 @@
       background:
         linear-gradient(145deg, rgba(135, 54, 71, 0.16), transparent 58%),
         rgba(255,255,255,0.04);
-      transform-origin: center;
-      transition: border-color 260ms ease, background 260ms ease;
-    }
-
-    .story-box.leaving {
-      border-color: rgba(228, 184, 108, 0.34);
-    }
-
-    .story-box.leaving .story-photo,
-    .story-box.leaving .story-text,
-    .story-box.leaving .story-count {
-      animation: storyOut 260ms cubic-bezier(.4,0,.2,1) both;
     }
 
     .story-photo {
@@ -185,7 +173,7 @@
       border: 1px solid rgba(248, 241, 232, 0.14);
       border-radius: 16px;
       background: rgba(0,0,0,0.22);
-      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+      animation: storyFade 360ms ease both;
     }
 
     .story-photo img {
@@ -197,7 +185,7 @@
     }
 
     .story-photo img.swap {
-      animation: photoIn 620ms cubic-bezier(.2,.8,.2,1) both;
+      animation: storyFade 360ms ease both;
     }
 
     .story-photo figcaption {
@@ -212,11 +200,11 @@
       font-family: Georgia, "Times New Roman", serif;
       font-size: clamp(1.28rem, 6.8vw, 2.15rem);
       line-height: 1.18;
-      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+      animation: storyFade 360ms ease both;
     }
 
     .story-text.swap {
-      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+      animation: storyFade 360ms ease both;
     }
 
     .story-count {
@@ -227,19 +215,9 @@
       text-transform: uppercase;
     }
 
-    @keyframes storyIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes storyOut {
-      from { opacity: 1; transform: translateY(0) scale(1); }
-      to { opacity: 0; transform: translateY(-10px) scale(0.985); }
-    }
-
-    @keyframes photoIn {
-      from { opacity: 0; transform: scale(1.045); filter: saturate(0.7); }
-      to { opacity: 1; transform: scale(1); filter: saturate(1); }
+    @keyframes storyFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .btn {
@@ -713,10 +691,14 @@
         <p class="eyebrow">Lo has adivinado</p>
         <h2>Cracovia, Polonia</h2>
         <figure class="final-photo">
-          <img src="assets/fotos-papa/final-clean.jpeg" alt="Entrada de Auschwitz-Birkenau">
-          <figcaption>Y este es el lugar que vais a visitar juntos.</figcaption>
+          <img src="assets/fotos-papa/cumples_60.jpeg" alt="Papá celebrando sus 60 años">
+          <figcaption>Feliz 60 cumpleaños, papá.</figcaption>
         </figure>
-        <p class="final-message">¡Feliz 60 cumpleaños, papá! Lo has adivinado: nos vamos a Cracovia, Polonia. Y sí... vamos a visitar Auschwitz-Birkenau. Siempre has querido ir, y Cristóbal va a estar ahí contigo. Pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
+        <p class="final-message">Lo has adivinado: nos vamos a Cracovia, Polonia. Cristóbal va a estar ahí contigo, pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
+        <figure class="final-photo">
+          <img src="assets/fotos-papa/final-clean.jpeg" alt="Entrada de Auschwitz-Birkenau">
+          <figcaption>Y sí... vamos a visitar Auschwitz-Birkenau, ese sitio al que siempre has querido ir.</figcaption>
+        </figure>
         <div class="needed" id="neededHints"></div>
 
         <div class="itinerary" aria-label="Itinerario completo">
@@ -778,16 +760,10 @@
         caption: 'Esta vez igual toca cambiar casco por maleta.'
       },
       {
-        text: 'Y donde comerás genial todo el día.',
+        text: 'Y donde comerás genial todo el día. Ahora sí: ¿aceptas el reto?',
         image: 'assets/fotos-papa/comerasasidefeliz.jpeg',
         alt: 'Papá sonriendo con comida',
         caption: 'Eso también cuenta como parte importante del viaje.'
-      },
-      {
-        text: 'Ahora sí: ¿aceptas el reto?',
-        image: 'assets/fotos-papa/cumples_60.jpeg',
-        alt: 'Papá celebrando sus 60 años',
-        caption: 'El regalo empieza aquí.'
       }
     ];
 
@@ -823,7 +799,6 @@
     const neededHints = document.getElementById('neededHints');
     const nextHintBtn = document.getElementById('nextHintBtn');
     const giveUpBtn = document.getElementById('giveUpBtn');
-    const storyBox = document.querySelector('.story-box');
     const storyImage = document.getElementById('storyImage');
     const storyCaption = document.getElementById('storyCaption');
     const storyText = document.getElementById('storyText');
@@ -897,15 +872,8 @@
         return;
       }
 
-      storyBtn.disabled = true;
-      storyBox.classList.add('leaving');
-
-      setTimeout(() => {
-        storyIndex += 1;
-        renderStory();
-        storyBox.classList.remove('leaving');
-        storyBtn.disabled = false;
-      }, 260);
+      storyIndex += 1;
+      renderStory();
     }
 
     function restartStory() {
