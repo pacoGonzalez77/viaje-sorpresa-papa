@@ -362,6 +362,30 @@
       line-height: 1.48;
     }
 
+    .final-photo {
+      margin: 20px 0 0;
+      overflow: hidden;
+      border: 1px solid rgba(248, 241, 232, 0.16);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.24);
+      animation: congratsIn 700ms cubic-bezier(.2,.8,.2,1) 160ms both;
+    }
+
+    .final-photo img {
+      display: block;
+      width: 100%;
+      height: clamp(170px, 36svh, 320px);
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .final-photo figcaption {
+      padding: 11px 13px 13px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.35;
+    }
+
     .congrats {
       margin-top: 18px;
       border: 1px solid rgba(228, 184, 108, 0.3);
@@ -660,6 +684,10 @@
         </div>
         <p class="eyebrow">Lo has adivinado</p>
         <h2>Cracovia, Polonia</h2>
+        <figure class="final-photo">
+          <img src="assets/fotos-papa/final-clean.jpeg" alt="Entrada de Auschwitz-Birkenau">
+          <figcaption>Y este es el lugar que vais a visitar juntos.</figcaption>
+        </figure>
         <p class="final-message">¡Lo has adivinado, papá! Nos vamos a Cracovia, Polonia. Y sí... vamos a visitar Auschwitz-Birkenau. Siempre has soñado con ir, y Cristóbal va a estar ahí contigo. Pero no vamos los dos solos: también viene Crichi, porque Cristóbal ha querido añadirla a este viaje. Esto es nuestro regalo para ti.</p>
         <div class="needed" id="neededHints"></div>
 
