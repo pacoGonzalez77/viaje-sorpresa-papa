@@ -167,11 +167,39 @@
         rgba(255,255,255,0.04);
     }
 
+    .story-photo {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid rgba(248, 241, 232, 0.14);
+      border-radius: 16px;
+      background: rgba(0,0,0,0.22);
+      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .story-photo img {
+      display: block;
+      width: 100%;
+      height: clamp(190px, 42svh, 330px);
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .story-photo img.swap {
+      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .story-photo figcaption {
+      padding: 10px 12px 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
     .story-text {
       color: var(--text);
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.55rem, 7.8vw, 2.55rem);
-      line-height: 1.15;
+      font-size: clamp(1.28rem, 6.8vw, 2.15rem);
+      line-height: 1.18;
       animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
     }
 
@@ -571,6 +599,10 @@
         <h1>Viaje sorpresa</h1>
         <div class="story-box" aria-live="polite">
           <div class="story-count" id="storyCount">Parte 1 de 6</div>
+          <figure class="story-photo">
+            <img id="storyImage" src="" alt="">
+            <figcaption id="storyCaption"></figcaption>
+          </figure>
           <div class="story-text" id="storyText"></div>
         </div>
         <div class="actions single">
@@ -659,12 +691,42 @@
 
   <script>
     const storyPages = [
-      'Papá... ya sabes que tu hijo Cristóbal es una persona muy impulsiva. Así que ha tomado una decisión.',
-      'Ha decidido llevarte a un sitio al que siempre has querido ir. Y no vais a ir solos... también va Crichi.',
-      'Sí, los tres juntos, porque Cristóbal ha querido añadirla a este viaje.',
-      'Bueno, ya sabes que nos vamos de viaje... y que parecía algo cerquita de Madrid.',
-      'Pero el destino real es bastante más especial. ¿Crees que puedes adivinarlo?',
-      'Si aceptas, empieza el reto.'
+      {
+        text: 'Papá... ya sabes que tu hijo Cristóbal es una persona muy impulsiva. Así que ha tomado una decisión.',
+        image: 'assets/fotos-papa/cumples_60.jpeg',
+        alt: 'Papá celebrando sus 60 años',
+        caption: 'Todo empieza con el protagonista de este viaje.'
+      },
+      {
+        text: 'Ha decidido llevarte a un sitio al que siempre has querido ir.',
+        image: 'assets/fotos-papa/regalo_cristobal.jpeg',
+        alt: 'Cristóbal con papá en una foto juntos',
+        caption: 'La idea empezó como regalo de Cristóbal.'
+      },
+      {
+        text: 'Y no vais a ir solos... también va Crichi.',
+        image: 'assets/fotos-papa/crichi_feliz.jpeg',
+        alt: 'Crichi feliz junto a papá',
+        caption: 'Cristóbal ha querido añadirla al plan.'
+      },
+      {
+        text: 'Sí, los tres juntos. Para vivir algo que llevas mucho tiempo queriendo hacer.',
+        image: 'assets/fotos-papa/pobre_crichi.jpeg',
+        alt: 'Crichi abrigada',
+        caption: 'Aviso: quizá haya que abrigarse un poco.'
+      },
+      {
+        text: 'Bueno, ya sabes que nos vamos de viaje... y que parecía algo cerquita de Madrid.',
+        image: 'assets/fotos-papa/nopuedesirenmoto.jpeg',
+        alt: 'Papá junto a una moto',
+        caption: 'Esta vez no vale escaparse en moto.'
+      },
+      {
+        text: 'Pero el destino real es bastante más especial. ¿Aceptas el reto?',
+        image: 'assets/fotos-papa/comerasasidefeliz.jpeg',
+        alt: 'Papá sonriendo con comida',
+        caption: 'Y tranquilo: también habrá momentos para disfrutar.'
+      }
     ];
 
     const hints = [
@@ -698,6 +760,8 @@
     const answer = document.getElementById('answer');
     const neededHints = document.getElementById('neededHints');
     const nextHintBtn = document.getElementById('nextHintBtn');
+    const storyImage = document.getElementById('storyImage');
+    const storyCaption = document.getElementById('storyCaption');
     const storyText = document.getElementById('storyText');
     const storyCount = document.getElementById('storyCount');
     const storyBtn = document.getElementById('storyBtn');
@@ -718,9 +782,15 @@
 
     function renderStory() {
       storyText.classList.remove('swap');
+      storyImage.classList.remove('swap');
       void storyText.offsetWidth;
-      storyText.textContent = storyPages[storyIndex];
+      const page = storyPages[storyIndex];
+      storyText.textContent = page.text;
+      storyImage.src = page.image;
+      storyImage.alt = page.alt;
+      storyCaption.textContent = page.caption;
       storyText.classList.add('swap');
+      storyImage.classList.add('swap');
       storyCount.textContent = `Parte ${storyIndex + 1} de ${storyPages.length}`;
       storyBtn.textContent = storyIndex === storyPages.length - 1 ? 'Acepto el reto → Empezar con las pistas' : 'Siguiente';
     }
