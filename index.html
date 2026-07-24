@@ -3,21 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#100d0d">
+  <meta name="theme-color" content="#101923">
   <title>Viaje sorpresa</title>
   <style>
     :root {
-      --bg: #100d0d;
-      --panel: rgba(31, 28, 28, 0.78);
-      --panel-strong: #1d1919;
-      --text: #f1eee8;
-      --muted: #b9b0a6;
-      --soft: #80766f;
-      --line: rgba(241, 238, 232, 0.13);
-      --red: #7e171b;
-      --red-soft: #a83a3f;
-      --gold: #d9b66f;
-      --shadow: rgba(0, 0, 0, 0.45);
+      --bg: #101923;
+      --panel: rgba(25, 35, 45, 0.88);
+      --panel-strong: #172330;
+      --text: #f8f1e8;
+      --muted: #d4c6b4;
+      --soft: #958878;
+      --line: rgba(248, 241, 232, 0.16);
+      --red: #873647;
+      --red-soft: #b45b68;
+      --gold: #e4b86c;
+      --blue: #91b7c7;
+      --shadow: rgba(4, 10, 16, 0.5);
     }
 
     * { box-sizing: border-box; }
@@ -34,9 +35,9 @@
       min-height: 100svh;
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 16% 12%, rgba(126, 23, 27, 0.38), transparent 34%),
-        radial-gradient(circle at 84% 8%, rgba(217, 182, 111, 0.10), transparent 30%),
-        linear-gradient(160deg, #100d0d 0%, #1a1717 45%, #0b0a0a 100%);
+        linear-gradient(125deg, rgba(145, 183, 199, 0.12), transparent 38%),
+        linear-gradient(235deg, rgba(228, 184, 108, 0.12), transparent 42%),
+        linear-gradient(160deg, #101923 0%, #172330 48%, #0c1219 100%);
     }
 
     body::before {
@@ -64,10 +65,12 @@
     .screen {
       width: 100%;
       display: none;
-      animation: rise 520ms ease both;
     }
 
-    .screen.active { display: block; }
+    .screen.active {
+      display: block;
+      animation: rise 620ms cubic-bezier(.2,.8,.2,1) both;
+    }
 
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
@@ -79,7 +82,7 @@
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 20px;
-      background: linear-gradient(180deg, rgba(32, 29, 29, 0.9), rgba(20, 18, 18, 0.94));
+      background: linear-gradient(180deg, rgba(30, 42, 54, 0.94), rgba(18, 28, 38, 0.96));
       box-shadow: 0 24px 72px var(--shadow);
       padding: 28px 22px;
     }
@@ -89,7 +92,7 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 5px;
-      background: linear-gradient(90deg, var(--red), #3e1012, var(--gold));
+      background: linear-gradient(90deg, var(--blue), var(--gold), var(--red));
     }
 
     .eyebrow {
@@ -141,13 +144,16 @@
       font-weight: 800;
       letter-spacing: 0.02em;
       cursor: pointer;
-      box-shadow: 0 12px 28px rgba(126, 23, 27, 0.34);
-      transition: transform 160ms ease, background 160ms ease, opacity 160ms ease;
+      box-shadow: 0 12px 28px rgba(135, 54, 71, 0.3);
+      transition: transform 160ms ease, background 160ms ease, opacity 160ms ease, box-shadow 160ms ease;
       -webkit-tap-highlight-color: transparent;
     }
 
     .btn:active { transform: scale(0.985); }
-    .btn:hover { background: #941d22; }
+    .btn:hover {
+      background: #9b4052;
+      box-shadow: 0 14px 34px rgba(135, 54, 71, 0.38);
+    }
     .btn.secondary {
       background: transparent;
       border: 1px solid var(--line);
@@ -184,10 +190,12 @@
       border: 1px solid var(--line);
       border-radius: 18px;
       background:
-        linear-gradient(135deg, rgba(126, 23, 27, 0.18), transparent 58%),
-        rgba(255,255,255,0.035);
+        linear-gradient(135deg, rgba(145, 183, 199, 0.13), transparent 54%),
+        linear-gradient(225deg, rgba(228, 184, 108, 0.1), transparent 52%),
+        rgba(255,255,255,0.045);
       padding: 24px 18px;
       margin-top: 18px;
+      transition: border-color 220ms ease, background 220ms ease;
     }
 
     .hint-label {
@@ -204,6 +212,15 @@
       font-size: clamp(1.55rem, 8vw, 2.6rem);
       line-height: 1.12;
       font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .hint-text.swap {
+      animation: hintSwap 440ms cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    @keyframes hintSwap {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .answer-form {
@@ -239,7 +256,7 @@
     .feedback {
       min-height: 24px;
       margin-top: 8px;
-      color: #e2c6c8;
+      color: #f0cfd4;
       font-size: 0.96rem;
     }
 
@@ -278,6 +295,16 @@
       border-radius: 14px;
       background: rgba(255,255,255,0.045);
       padding: 16px 16px 16px 14px;
+      animation: dayIn 520ms ease both;
+    }
+
+    .day:nth-child(2) { animation-delay: 80ms; }
+    .day:nth-child(3) { animation-delay: 160ms; }
+    .day:nth-child(4) { animation-delay: 240ms; }
+
+    @keyframes dayIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     .day strong {
@@ -307,6 +334,89 @@
       background: rgba(217, 182, 111, 0.06);
     }
 
+    .postcard {
+      position: relative;
+      display: grid;
+      gap: 18px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(228, 184, 108, 0.28);
+      border-radius: 18px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(248, 241, 232, 0.1), rgba(145, 183, 199, 0.08)),
+        rgba(255,255,255,0.035);
+    }
+
+    .stamp {
+      justify-self: end;
+      border: 1px solid rgba(228, 184, 108, 0.42);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: var(--gold);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .route {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .route span {
+      min-width: 0;
+      font-size: clamp(0.95rem, 4.2vw, 1.1rem);
+    }
+
+    .route i {
+      position: relative;
+      height: 2px;
+      overflow: hidden;
+      background: rgba(248, 241, 232, 0.22);
+    }
+
+    .route i::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 42%;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      animation: travelLine 2.6s ease-in-out infinite;
+    }
+
+    @keyframes travelLine {
+      from { transform: translateX(-120%); }
+      to { transform: translateX(260%); }
+    }
+
+    .skyline {
+      height: 72px;
+      display: grid;
+      grid-template-columns: 1fr 0.8fr 1.4fr 0.9fr 1.1fr;
+      align-items: end;
+      gap: 7px;
+      padding-top: 8px;
+    }
+
+    .skyline span {
+      display: block;
+      border: 1px solid rgba(228, 184, 108, 0.2);
+      border-bottom: 0;
+      border-radius: 9px 9px 0 0;
+      background: linear-gradient(180deg, rgba(228, 184, 108, 0.2), rgba(145, 183, 199, 0.08));
+    }
+
+    .skyline span:nth-child(1) { height: 44px; }
+    .skyline span:nth-child(2) { height: 60px; }
+    .skyline span:nth-child(3) { height: 36px; }
+    .skyline span:nth-child(4) { height: 54px; }
+    .skyline span:nth-child(5) { height: 42px; }
+
     @media (min-width: 640px) {
       .card { padding: 38px 36px; border-radius: 24px; }
       .actions { grid-template-columns: 1fr 1fr; }
@@ -321,7 +431,17 @@
   <main class="app">
     <section id="start" class="screen active">
       <div class="card">
-        <div class="seal">?</div>
+        <div class="postcard" aria-hidden="true">
+          <div class="stamp">3 noches</div>
+          <div class="route">
+            <span>Madrid</span>
+            <i></i>
+            <span>?</span>
+          </div>
+          <div class="skyline">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
         <p class="eyebrow">Un regalo de tus hijos</p>
         <h1>Viaje sorpresa</h1>
         <p class="lead">Papá, llevamos tiempo preparando algo muy especial para ti.</p>
@@ -363,7 +483,17 @@
 
     <section id="final" class="screen">
       <div class="card">
-        <div class="seal">✓</div>
+        <div class="postcard" aria-hidden="true">
+          <div class="stamp">Polonia</div>
+          <div class="route">
+            <span>Madrid</span>
+            <i></i>
+            <span>Cracovia</span>
+          </div>
+          <div class="skyline">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
         <p class="eyebrow">Lo has adivinado</p>
         <h2>Cracovia, Polonia</h2>
         <p class="final-message">¡Lo has adivinado! Papá, este viaje es nuestro regalo para ti. Siempre has soñado con visitar Auschwitz-Birkenau, y vamos a hacerlo juntos. Porque no hay nadie con quien prefiramos compartir este momento.</p>
@@ -397,13 +527,15 @@
 
   <script>
     const hints = [
-      'Europa del Este',
-      'Vuelo de menos de 3 horas desde Madrid',
-      'La moneda es el esloti (zł)',
-      'Una ciudad con una plaza medieval de las más bonitas de Europa',
-      'Un país con una historia profunda en la Segunda Guerra Mundial',
-      'Vais a visitar un lugar que marcó para siempre la historia de la humanidad',
-      'El campo de concentración más conocido del mundo está a solo 1 hora'
+      'Hace frío, pero la ciudad se ilumina pronto en noviembre',
+      'Hay que volar hacia el noreste de Europa',
+      'Será una escapada de tres noches, con abrigo en la maleta',
+      'No se paga en euros, aunque seguimos dentro de la Unión Europea',
+      'Su casco antiguo tiene una plaza enorme rodeada de soportales y cafés',
+      'Uno de sus barrios guarda una memoria judía muy viva',
+      'Allí hay una fábrica que una película hizo inolvidable',
+      'El sábado iremos a un lugar que no se visita por turismo, sino por memoria',
+      'A poco más de una hora está Auschwitz-Birkenau'
     ];
 
     const validAnswers = ['cracovia', 'krakow', 'kraków', 'auschwitz', 'polonia', 'poland'];
@@ -450,7 +582,10 @@
     }
 
     function renderHint() {
+      hintText.classList.remove('swap');
+      void hintText.offsetWidth;
       hintText.textContent = hints[hintIndex];
+      hintText.classList.add('swap');
       hintLabel.textContent = `Pista ${hintIndex + 1}`;
       counter.textContent = `Has visto ${hintsSeen} ${hintsSeen === 1 ? 'pista' : 'pistas'} de ${hints.length}.`;
       nextHintBtn.disabled = hintIndex === hints.length - 1;
