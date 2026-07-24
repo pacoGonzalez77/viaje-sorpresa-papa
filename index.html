@@ -131,6 +131,28 @@
 
     .copy { margin-top: 18px; }
 
+    .intro-lines {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .intro-lines p {
+      color: var(--text);
+      font-size: clamp(1.12rem, 4.8vw, 1.42rem);
+      line-height: 1.42;
+      opacity: 0;
+      animation: introLine 780ms cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    .intro-lines p:nth-child(2) { animation-delay: 520ms; }
+    .intro-lines p:nth-child(3) { animation-delay: 1040ms; color: var(--muted); }
+
+    @keyframes introLine {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .btn {
       width: 100%;
       min-height: 58px;
@@ -271,6 +293,24 @@
       color: var(--text);
       font-size: clamp(1.15rem, 5vw, 1.42rem);
       line-height: 1.48;
+    }
+
+    .congrats {
+      margin-top: 18px;
+      border: 1px solid rgba(228, 184, 108, 0.3);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,0.045);
+      color: var(--text);
+      font-size: clamp(1.2rem, 5.4vw, 1.55rem);
+      line-height: 1.35;
+      font-weight: 800;
+      animation: congratsIn 700ms cubic-bezier(.2,.8,.2,1) 240ms both;
+    }
+
+    @keyframes congratsIn {
+      from { opacity: 0; transform: scale(0.98) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     .needed {
@@ -417,6 +457,52 @@
     .skyline span:nth-child(4) { height: 54px; }
     .skyline span:nth-child(5) { height: 42px; }
 
+    .fireworks {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .firework {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      opacity: 0;
+      background: var(--gold);
+      box-shadow:
+        0 -34px 0 var(--gold),
+        24px -24px 0 var(--blue),
+        34px 0 0 var(--gold),
+        24px 24px 0 var(--red-soft),
+        0 34px 0 var(--blue),
+        -24px 24px 0 var(--gold),
+        -34px 0 0 var(--red-soft),
+        -24px -24px 0 var(--blue);
+      animation: firework 1.8s ease-out infinite;
+    }
+
+    .firework:nth-child(1) { top: 92px; left: 18%; animation-delay: 180ms; }
+    .firework:nth-child(2) { top: 142px; right: 18%; animation-delay: 680ms; transform: scale(0.78); }
+    .firework:nth-child(3) { top: 56px; right: 34%; animation-delay: 1160ms; transform: scale(0.62); }
+
+    @keyframes firework {
+      0% { opacity: 0; transform: scale(0.2); }
+      18% { opacity: 1; }
+      78% { opacity: 0.9; }
+      100% { opacity: 0; transform: scale(1.25); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
     @media (min-width: 640px) {
       .card { padding: 38px 36px; border-radius: 24px; }
       .actions { grid-template-columns: 1fr 1fr; }
@@ -444,8 +530,11 @@
         </div>
         <p class="eyebrow">Un regalo de tus hijos</p>
         <h1>Viaje sorpresa</h1>
-        <p class="lead">Papá, llevamos tiempo preparando algo muy especial para ti.</p>
-        <p class="copy">Uno de tus sueños está a punto de hacerse realidad. ¿Puedes adivinar a dónde vamos?</p>
+        <div class="intro-lines">
+          <p>Papá, llevamos tiempo preparando algo muy especial para ti.</p>
+          <p>No es solo una escapada. Es una promesa que queríamos cumplir contigo.</p>
+          <p>Uno de tus sueños está a punto de hacerse realidad. ¿Puedes adivinar a dónde vamos?</p>
+        </div>
         <div class="actions single">
           <button class="btn" id="startBtn">Empezar</button>
         </div>
@@ -483,6 +572,11 @@
 
     <section id="final" class="screen">
       <div class="card">
+        <div class="fireworks" aria-hidden="true">
+          <span class="firework"></span>
+          <span class="firework"></span>
+          <span class="firework"></span>
+        </div>
         <div class="postcard" aria-hidden="true">
           <div class="stamp">Polonia</div>
           <div class="route">
@@ -496,7 +590,8 @@
         </div>
         <p class="eyebrow">Lo has adivinado</p>
         <h2>Cracovia, Polonia</h2>
-        <p class="final-message">¡Lo has adivinado! Papá, este viaje es nuestro regalo para ti. Siempre has soñado con visitar Auschwitz-Birkenau, y vamos a hacerlo juntos. Porque no hay nadie con quien prefiramos compartir este momento.</p>
+        <p class="congrats">Enhorabuena, papá: tus hijos te llevan de viaje a Cracovia.</p>
+        <p class="final-message">Y más importante aún: vamos a cumplir contigo tu sueño de visitar Auschwitz-Birkenau. Lo haremos juntos, con calma, con respeto y con toda la emoción que merece este momento.</p>
         <div class="needed" id="neededHints"></div>
 
         <div class="itinerary" aria-label="Itinerario completo">
