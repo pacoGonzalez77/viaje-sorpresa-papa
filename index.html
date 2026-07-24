@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100d0d">
+  <title>Viaje sorpresa</title>
+  <style>
+    :root {
+      --bg: #100d0d;
+      --panel: rgba(31, 28, 28, 0.78);
+      --panel-strong: #1d1919;
+      --text: #f1eee8;
+      --muted: #b9b0a6;
+      --soft: #80766f;
+      --line: rgba(241, 238, 232, 0.13);
+      --red: #7e171b;
+      --red-soft: #a83a3f;
+      --gold: #d9b66f;
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100svh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 16% 12%, rgba(126, 23, 27, 0.38), transparent 34%),
+        radial-gradient(circle at 84% 8%, rgba(217, 182, 111, 0.10), transparent 30%),
+        linear-gradient(160deg, #100d0d 0%, #1a1717 45%, #0b0a0a 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 76%);
+    }
+
+    .app {
+      width: min(100%, 720px);
+      min-height: 100svh;
+      margin: 0 auto;
+      padding: max(22px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen {
+      width: 100%;
+      display: none;
+      animation: rise 520ms ease both;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(32, 29, 29, 0.9), rgba(20, 18, 18, 0.94));
+      box-shadow: 0 24px 72px var(--shadow);
+      padding: 28px 22px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--red), #3e1012, var(--gold));
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2 {
+      margin: 0;
+      line-height: 1.05;
+      letter-spacing: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+    }
+
+    h1 { font-size: clamp(2.45rem, 12vw, 4.6rem); }
+    h2 { font-size: clamp(2rem, 9vw, 3.4rem); }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.58;
+    }
+
+    .lead {
+      margin-top: 22px;
+      color: var(--text);
+      font-size: clamp(1.2rem, 5vw, 1.55rem);
+      line-height: 1.42;
+    }
+
+    .copy { margin-top: 18px; }
+
+    .btn {
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: var(--red);
+      color: #fff8f3;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(126, 23, 27, 0.34);
+      transition: transform 160ms ease, background 160ms ease, opacity 160ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active { transform: scale(0.985); }
+    .btn:hover { background: #941d22; }
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid var(--line);
+      box-shadow: none;
+      color: var(--text);
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hint-meter {
+      display: flex;
+      gap: 7px;
+      margin: 22px 0 20px;
+    }
+
+    .dot {
+      height: 8px;
+      flex: 1;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .dot.on { background: var(--red-soft); }
+
+    .hint-box {
+      min-height: 156px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(126, 23, 27, 0.18), transparent 58%),
+        rgba(255,255,255,0.035);
+      padding: 24px 18px;
+      margin-top: 18px;
+    }
+
+    .hint-label {
+      margin-bottom: 10px;
+      color: var(--soft);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hint-text {
+      color: var(--text);
+      font-size: clamp(1.55rem, 8vw, 2.6rem);
+      line-height: 1.12;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .answer-form {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      min-height: 58px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      font: inherit;
+      font-size: 1.1rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(217, 182, 111, 0.7);
+      box-shadow: 0 0 0 4px rgba(217, 182, 111, 0.08);
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 8px;
+      color: #e2c6c8;
+      font-size: 0.96rem;
+    }
+
+    .counter {
+      margin-top: 16px;
+      color: var(--soft);
+      font-size: 0.95rem;
+    }
+
+    .final-message {
+      margin-top: 20px;
+      color: var(--text);
+      font-size: clamp(1.15rem, 5vw, 1.42rem);
+      line-height: 1.48;
+    }
+
+    .needed {
+      display: inline-flex;
+      margin-top: 18px;
+      border: 1px solid rgba(217, 182, 111, 0.28);
+      border-radius: 999px;
+      padding: 9px 13px;
+      color: var(--gold);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .itinerary {
+      display: grid;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .day {
+      border-left: 4px solid var(--red-soft);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.045);
+      padding: 16px 16px 16px 14px;
+    }
+
+    .day strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 1.02rem;
+    }
+
+    .day span {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .seal {
+      width: 72px;
+      height: 72px;
+      border: 1px solid rgba(217, 182, 111, 0.38);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin-bottom: 20px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      background: rgba(217, 182, 111, 0.06);
+    }
+
+    @media (min-width: 640px) {
+      .card { padding: 38px 36px; border-radius: 24px; }
+      .actions { grid-template-columns: 1fr 1fr; }
+      .actions.single { grid-template-columns: 1fr; }
+      .answer-form { grid-template-columns: 1fr auto; align-items: end; }
+      .answer-form label { grid-column: 1 / -1; }
+      .answer-form .btn { width: auto; min-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="start" class="screen active">
+      <div class="card">
+        <div class="seal">?</div>
+        <p class="eyebrow">Un regalo de tus hijos</p>
+        <h1>Viaje sorpresa</h1>
+        <p class="lead">Papá, llevamos tiempo preparando algo muy especial para ti.</p>
+        <p class="copy">Uno de tus sueños está a punto de hacerse realidad. ¿Puedes adivinar a dónde vamos?</p>
+        <div class="actions single">
+          <button class="btn" id="startBtn">Empezar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <div class="card">
+        <p class="eyebrow">Adivina el destino</p>
+        <h2>Una pista cada vez</h2>
+
+        <div class="hint-meter" id="hintMeter" aria-label="Progreso de pistas"></div>
+
+        <div class="hint-box">
+          <div class="hint-label" id="hintLabel">Pista 1</div>
+          <div class="hint-text" id="hintText"></div>
+        </div>
+
+        <form class="answer-form" id="answerForm">
+          <label for="answer">Tu respuesta</label>
+          <input id="answer" type="text" autocomplete="off" inputmode="text" placeholder="Escribe el destino">
+          <button class="btn" type="submit">Probar</button>
+        </form>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+
+        <div class="actions">
+          <button class="btn secondary" id="nextHintBtn" type="button">Dame otra pista</button>
+          <button class="btn secondary" id="resetBtn" type="button">Volver a empezar</button>
+        </div>
+
+        <p class="counter" id="counter"></p>
+      </div>
+    </section>
+
+    <section id="final" class="screen">
+      <div class="card">
+        <div class="seal">✓</div>
+        <p class="eyebrow">Lo has adivinado</p>
+        <h2>Cracovia, Polonia</h2>
+        <p class="final-message">¡Lo has adivinado! Papá, este viaje es nuestro regalo para ti. Siempre has soñado con visitar Auschwitz-Birkenau, y vamos a hacerlo juntos. Porque no hay nadie con quien prefiramos compartir este momento.</p>
+        <div class="needed" id="neededHints"></div>
+
+        <div class="itinerary" aria-label="Itinerario completo">
+          <div class="day">
+            <strong>Viernes de noviembre</strong>
+            <span>Salida desde Madrid y llegada a Cracovia. Primera noche para caminar, cenar juntos y empezar la escapada.</span>
+          </div>
+          <div class="day">
+            <strong>Sábado</strong>
+            <span>Auschwitz-Birkenau, día completo con tour guiado en español. Una visita profunda, histórica y muy esperada.</span>
+          </div>
+          <div class="day">
+            <strong>Domingo</strong>
+            <span>Kazimierz, el antiguo barrio judío de Cracovia, y visita a la Fábrica de Schindler.</span>
+          </div>
+          <div class="day">
+            <strong>Lunes</strong>
+            <span>Último paseo por Cracovia y vuelta a Madrid, con tres noches compartidas y un recuerdo para siempre.</span>
+          </div>
+        </div>
+
+        <div class="actions single">
+          <button class="btn" id="playAgainBtn">Ver las pistas otra vez</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const hints = [
+      'Europa del Este',
+      'Vuelo de menos de 3 horas desde Madrid',
+      'La moneda es el esloti (zł)',
+      'Una ciudad con una plaza medieval de las más bonitas de Europa',
+      'Un país con una historia profunda en la Segunda Guerra Mundial',
+      'Vais a visitar un lugar que marcó para siempre la historia de la humanidad',
+      'El campo de concentración más conocido del mundo está a solo 1 hora'
+    ];
+
+    const validAnswers = ['cracovia', 'krakow', 'kraków', 'auschwitz', 'polonia', 'poland'];
+
+    let hintIndex = 0;
+    let hintsSeen = 1;
+
+    const screens = {
+      start: document.getElementById('start'),
+      game: document.getElementById('game'),
+      final: document.getElementById('final')
+    };
+
+    const hintText = document.getElementById('hintText');
+    const hintLabel = document.getElementById('hintLabel');
+    const hintMeter = document.getElementById('hintMeter');
+    const counter = document.getElementById('counter');
+    const feedback = document.getElementById('feedback');
+    const answer = document.getElementById('answer');
+    const neededHints = document.getElementById('neededHints');
+    const nextHintBtn = document.getElementById('nextHintBtn');
+
+    function normalize(value) {
+      return value
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/ł/g, 'l');
+    }
+
+    function showScreen(name) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[name].classList.add('active');
+    }
+
+    function renderMeter() {
+      hintMeter.innerHTML = '';
+      hints.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (index <= hintIndex ? ' on' : '');
+        hintMeter.appendChild(dot);
+      });
+    }
+
+    function renderHint() {
+      hintText.textContent = hints[hintIndex];
+      hintLabel.textContent = `Pista ${hintIndex + 1}`;
+      counter.textContent = `Has visto ${hintsSeen} ${hintsSeen === 1 ? 'pista' : 'pistas'} de ${hints.length}.`;
+      nextHintBtn.disabled = hintIndex === hints.length - 1;
+      nextHintBtn.textContent = hintIndex === hints.length - 1 ? 'No quedan más pistas' : 'Dame otra pista';
+      nextHintBtn.style.opacity = nextHintBtn.disabled ? '0.45' : '1';
+      renderMeter();
+    }
+
+    function startGame() {
+      hintIndex = 0;
+      hintsSeen = 1;
+      answer.value = '';
+      feedback.textContent = '';
+      showScreen('game');
+      renderHint();
+      setTimeout(() => answer.focus(), 250);
+    }
+
+    function nextHint() {
+      if (hintIndex >= hints.length - 1) return;
+      hintIndex += 1;
+      hintsSeen = Math.max(hintsSeen, hintIndex + 1);
+      feedback.textContent = '';
+      renderHint();
+    }
+
+    function isCorrect(value) {
+      const normalized = normalize(value);
+      return validAnswers.some(valid => normalize(valid) === normalized);
+    }
+
+    function reveal() {
+      neededHints.textContent = `Has necesitado ${hintsSeen} ${hintsSeen === 1 ? 'pista' : 'pistas'}.`;
+      showScreen('final');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('resetBtn').addEventListener('click', startGame);
+    document.getElementById('playAgainBtn').addEventListener('click', startGame);
+    nextHintBtn.addEventListener('click', nextHint);
+
+    document.getElementById('answerForm').addEventListener('submit', event => {
+      event.preventDefault();
+      if (isCorrect(answer.value)) {
+        reveal();
+      } else {
+        feedback.textContent = 'Todavía no. Piensa en el país, la ciudad o el lugar histórico.';
+        answer.select();
+      }
+    });
+
+    renderHint();
+  </script>
+</body>
+</html>
