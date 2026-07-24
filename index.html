@@ -165,6 +165,18 @@
       background:
         linear-gradient(145deg, rgba(135, 54, 71, 0.16), transparent 58%),
         rgba(255,255,255,0.04);
+      transform-origin: center;
+      transition: border-color 260ms ease, background 260ms ease;
+    }
+
+    .story-box.leaving {
+      border-color: rgba(228, 184, 108, 0.34);
+    }
+
+    .story-box.leaving .story-photo,
+    .story-box.leaving .story-text,
+    .story-box.leaving .story-count {
+      animation: storyOut 260ms cubic-bezier(.4,0,.2,1) both;
     }
 
     .story-photo {
@@ -185,7 +197,7 @@
     }
 
     .story-photo img.swap {
-      animation: storyIn 520ms cubic-bezier(.2,.8,.2,1) both;
+      animation: photoIn 620ms cubic-bezier(.2,.8,.2,1) both;
     }
 
     .story-photo figcaption {
@@ -220,6 +232,16 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes storyOut {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-10px) scale(0.985); }
+    }
+
+    @keyframes photoIn {
+      from { opacity: 0; transform: scale(1.045); filter: saturate(0.7); }
+      to { opacity: 1; transform: scale(1); filter: saturate(1); }
+    }
+
     .btn {
       width: 100%;
       min-height: 58px;
@@ -239,6 +261,11 @@
     }
 
     .btn:active { transform: scale(0.985); }
+    .btn:disabled {
+      cursor: wait;
+      opacity: 0.72;
+    }
+
     .btn:hover {
       background: #9b4052;
       box-shadow: 0 14px 34px rgba(135, 54, 71, 0.38);
@@ -796,6 +823,7 @@
     const neededHints = document.getElementById('neededHints');
     const nextHintBtn = document.getElementById('nextHintBtn');
     const giveUpBtn = document.getElementById('giveUpBtn');
+    const storyBox = document.querySelector('.story-box');
     const storyImage = document.getElementById('storyImage');
     const storyCaption = document.getElementById('storyCaption');
     const storyText = document.getElementById('storyText');
@@ -869,8 +897,15 @@
         return;
       }
 
-      storyIndex += 1;
-      renderStory();
+      storyBtn.disabled = true;
+      storyBox.classList.add('leaving');
+
+      setTimeout(() => {
+        storyIndex += 1;
+        renderStory();
+        storyBox.classList.remove('leaving');
+        storyBtn.disabled = false;
+      }, 260);
     }
 
     function restartStory() {
